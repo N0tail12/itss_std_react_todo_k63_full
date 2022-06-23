@@ -1,49 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 /* コンポーネント */
 import TodoItem from './TodoItem';
 import Input from './Input';
 import Filter from './Filter';
 
-/* カスタムフック */
-import useStorage from '../hooks/storage';
-
-/* ライブラリ */
-import {getKey} from "../lib/util";
+// import useStorage from '../hooks/storage';
+import useStorage from '../hooks/storage'
 
 function Todo() {
-  const [items, putItems, clearItems] = useStorage();
+  const [items, addItem, updateItem, clearItems] = useStorage();
   
   const [filter, setFilter] = React.useState('ALL');
 
   const displayItems = items.filter(item => {
     if (filter === 'ALL') return true;
-    if (filter === 'TODO') return !item.done;
-    if (filter === 'DONE') return item.done;
+    else if (filter === 'TODO') return !item.done;
+    else return item.done;
   });
   
   const handleCheck = checked => {
-    const newItems = items.map(item => {
-      if (item.key === checked.key) {
-        item.done = !item.done;
-      }
-      return item;
-    });
-    putItems(newItems);
+    updateItem(checked);
   };
   
   const handleAdd = text => {
-    putItems([...items, { key: getKey(), text, done: false }]);
+    addItem({ text, done: false });
   };
   
   const handleFilterChange = value => setFilter(value);
 
   return (
-    <article class="panel is-danger">
+    <article className="panel is-danger">
       <div className="panel-heading">
-        <span class="icon-text">
-          <span class="icon">
-            <i class="fas fa-calendar-check"></i>
+        <span className="icon-text">
+          <span className="icon">
+            <i className="fas fa-calendar-check"></i>
           </span>
           <span> ITSS Todoアプリ</span>
         </span>
