@@ -5,18 +5,26 @@ import { addFirebaseItem, updateFirebaseItem, getFirebaseItems, clearFirebaseIte
 function useStorage() {
   const [items, setItems] = useState([]);
 
+  const [update, setUpdate] = useState(true);
+
   useEffect(() => {
-    getItems();
-  }, [items]);
+    if(update){
+      getItems();
+    }
+  }, [items, update]);
 
   const getItems = async () => {
+    console.log("1111")
     const _items = await getFirebaseItems();
     setItems(_items);
+    setUpdate(false);
   };
+
   const addItem = async item => {
     const newItem = { text: item.text, done: item.done };
     await addFirebaseItem(newItem);
     setItems([...items, newItem]);
+    setUpdate(true);
   };
 
   const updateItem = async checked => {
@@ -29,6 +37,7 @@ function useStorage() {
       return item;
     })
     setItems(newItems);
+    setUpdate(true);
   }
 
   const clearItems = () => {
@@ -37,7 +46,9 @@ function useStorage() {
       return 0;
     })
     setItems([]);
+    setUpdate(true);
   };
+
   return [items, addItem, updateItem, clearItems];
 }
 

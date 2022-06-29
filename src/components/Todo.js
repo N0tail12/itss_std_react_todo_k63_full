@@ -1,22 +1,22 @@
 import React from 'react';
 
-/* コンポーネント */
+
 import TodoItem from './TodoItem';
 import Input from './Input';
 import Filter from './Filter';
 
-// import useStorage from '../hooks/storage';
 import useStorage from '../hooks/storage'
 
 function Todo() {
+  
   const [items, addItem, updateItem, clearItems] = useStorage();
   
   const [filter, setFilter] = React.useState('ALL');
 
   const displayItems = items.filter(item => {
     if (filter === 'ALL') return true;
-    else if (filter === 'TODO') return !item.done;
-    else return item.done;
+    if (filter === 'TODO') return !item.done;
+    if (filter === 'DONE') return item.done;
   });
   
   const handleCheck = checked => {
@@ -46,7 +46,7 @@ function Todo() {
       />
       {displayItems.map(item => (
         <TodoItem 
-          key={item.key}
+          key={item.id}
           item={item}
           onCheck={handleCheck}
         />
